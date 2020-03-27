@@ -23,6 +23,7 @@ type LocalClient interface {
 
 type ForeignClient interface {
 	HeaderByNumber(context.Context, *big.Int) (*types.Header, error)
+	BalanceAt(context.Context, common.Address, *big.Int) (*big.Int, error)
 }
 
 func NewService(
@@ -114,12 +115,9 @@ func (s *Service) scan(ctx context.Context, start, end *big.Int) error {
 		s.log.Debugf("no configured banks, skipping scan")
 		return nil
 	}
-	if from == nil {
-		s.log.Debugf("list of senders is nil. skipping scan")
+	if from != nil && len(from) == 0 {
+		s.log.Debugf("list of senders is empty. skipping scan")
 		return nil
-	}
-	if len(from) == 0 {
-		s.log.Infof("transfers from all senders are accepted for current scan. start %v. end %v.", start, end)
 	}
 
 	endu := end.Uint64()
@@ -146,7 +144,19 @@ func (s *Service) scan(ctx context.Context, start, end *big.Int) error {
 			s.log.Debugf("transfer 0x%x already executed", filter.Event.Raw.TxHash)
 			continue
 		}
+
 		opts := s.txOpts
+		balance, err := s.fclient.BalanceAt(ctx, opts.From, nil)
+		if err != nil {
+			return err
+		}
+		// less or equal to account for additional gas cost
+		if balance.Cmp(filter.Event.Value) <= 0 {
+			return fmt.Errorf("not enough funds on bank 0x%x to make a transfer for %v",
+				opts.From, filter.Event.Value,
+			)
+		}
+
 		tx, err := s.bridge.ExecuteTransfer(&opts,
 			filter.Event.From,
 			filter.Event.Value,
