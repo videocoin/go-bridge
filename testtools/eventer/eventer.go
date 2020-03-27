@@ -28,15 +28,15 @@ var (
 )
 
 // EventerABI is the input ABI used to generate the binding from.
-const EventerABI = "[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
+const EventerABI = "[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
 
 // EventerFuncSigs maps the 4-byte function signature to its string representation.
 var EventerFuncSigs = map[string]string{
-	"beabacc8": "transfer(address,address,uint256)",
+	"a9059cbb": "transfer(address,uint256)",
 }
 
 // EventerBin is the compiled bytecode used for deploying new contracts.
-var EventerBin = "0x6080604052348015600f57600080fd5b5060e78061001e6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063beabacc814602d575b600080fd5b606060048036036060811015604157600080fd5b506001600160a01b038135811691602081013590911690604001356062565b005b816001600160a01b0316836001600160a01b03167fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef836040518082815260200191505060405180910390a350505056fea265627a7a72315820e4885badb8e0c2472504b739852549b2599ddf7815f4ee29fc22806a161370a564736f6c63430005100032"
+var EventerBin = "0x6080604052348015600f57600080fd5b5060ec8061001e6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063a9059cbb14602d575b600080fd5b605660048036036040811015604157600080fd5b506001600160a01b038135169060200135606a565b604080519115158252519081900360200190f35b6040805182815290516000916001600160a01b0385169133917fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef919081900360200190a35060019291505056fea265627a7a723158202a80cf74afb3e3984876fc80936606e6425e9a0888d8e45b8a1eb2423d5421b864736f6c63430005100032"
 
 // DeployEventer deploys a new Ethereum contract, binding an instance of Eventer to it.
 func DeployEventer(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *Eventer, error) {
@@ -194,25 +194,25 @@ func (_Eventer *EventerTransactorRaw) Transact(opts *bind.TransactOpts, method s
 	return _Eventer.Contract.contract.Transact(opts, method, params...)
 }
 
-// Transfer is a paid mutator transaction binding the contract method 0xbeabacc8.
+// Transfer is a paid mutator transaction binding the contract method 0xa9059cbb.
 //
-// Solidity: function transfer(address from, address to, uint256 value) returns()
-func (_Eventer *EventerTransactor) Transfer(opts *bind.TransactOpts, from common.Address, to common.Address, value *big.Int) (*types.Transaction, error) {
-	return _Eventer.contract.Transact(opts, "transfer", from, to, value)
+// Solidity: function transfer(address recipient, uint256 amount) returns(bool)
+func (_Eventer *EventerTransactor) Transfer(opts *bind.TransactOpts, recipient common.Address, amount *big.Int) (*types.Transaction, error) {
+	return _Eventer.contract.Transact(opts, "transfer", recipient, amount)
 }
 
-// Transfer is a paid mutator transaction binding the contract method 0xbeabacc8.
+// Transfer is a paid mutator transaction binding the contract method 0xa9059cbb.
 //
-// Solidity: function transfer(address from, address to, uint256 value) returns()
-func (_Eventer *EventerSession) Transfer(from common.Address, to common.Address, value *big.Int) (*types.Transaction, error) {
-	return _Eventer.Contract.Transfer(&_Eventer.TransactOpts, from, to, value)
+// Solidity: function transfer(address recipient, uint256 amount) returns(bool)
+func (_Eventer *EventerSession) Transfer(recipient common.Address, amount *big.Int) (*types.Transaction, error) {
+	return _Eventer.Contract.Transfer(&_Eventer.TransactOpts, recipient, amount)
 }
 
-// Transfer is a paid mutator transaction binding the contract method 0xbeabacc8.
+// Transfer is a paid mutator transaction binding the contract method 0xa9059cbb.
 //
-// Solidity: function transfer(address from, address to, uint256 value) returns()
-func (_Eventer *EventerTransactorSession) Transfer(from common.Address, to common.Address, value *big.Int) (*types.Transaction, error) {
-	return _Eventer.Contract.Transfer(&_Eventer.TransactOpts, from, to, value)
+// Solidity: function transfer(address recipient, uint256 amount) returns(bool)
+func (_Eventer *EventerTransactorSession) Transfer(recipient common.Address, amount *big.Int) (*types.Transaction, error) {
+	return _Eventer.Contract.Transfer(&_Eventer.TransactOpts, recipient, amount)
 }
 
 // EventerTransferIterator is returned from FilterTransfer and is used to iterate over the raw logs and unpacked data for Transfer events raised by the Eventer contract.

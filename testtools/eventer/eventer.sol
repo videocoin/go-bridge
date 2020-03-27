@@ -6,7 +6,8 @@ contract Eventer {
 
     constructor() public {}
 
-    function transfer(address from, address to, uint256 value) external {
-        emit Transfer(from, to, value);
+    function transfer(address recipient, uint256 amount) external returns (bool) {
+      emit Transfer(msg.sender, recipient, amount);
+      return true;
     }
 }
