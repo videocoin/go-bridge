@@ -28,15 +28,16 @@ var (
 )
 
 // EventerABI is the input ABI used to generate the binding from.
-const EventerABI = "[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
+const EventerABI = "[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
 
 // EventerFuncSigs maps the 4-byte function signature to its string representation.
 var EventerFuncSigs = map[string]string{
+	"70a08231": "balanceOf(address)",
 	"a9059cbb": "transfer(address,uint256)",
 }
 
 // EventerBin is the compiled bytecode used for deploying new contracts.
-var EventerBin = "0x6080604052348015600f57600080fd5b5060ec8061001e6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063a9059cbb14602d575b600080fd5b605660048036036040811015604157600080fd5b506001600160a01b038135169060200135606a565b604080519115158252519081900360200190f35b6040805182815290516000916001600160a01b0385169133917fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef919081900360200190a35060019291505056fea265627a7a723158202a80cf74afb3e3984876fc80936606e6425e9a0888d8e45b8a1eb2423d5421b864736f6c63430005100032"
+var EventerBin = "0x608060405234801561001057600080fd5b5061016e806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c806370a082311461003b578063a9059cbb14610073575b600080fd5b6100616004803603602081101561005157600080fd5b50356001600160a01b03166100b3565b60408051918252519081900360200190f35b61009f6004803603604081101561008957600080fd5b506001600160a01b0381351690602001356100ce565b604080519115158252519081900360200190f35b6001600160a01b031660009081526020819052604090205490565b6040805182815290516000916001600160a01b0385169133917fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef919081900360200190a3506001600160a01b038216600090815260208190526040902080548201905560019291505056fea265627a7a723158204effcf1f641cec0ed3937dbfea862597067356901ef2722f61571fc624ea974464736f6c63430005100032"
 
 // DeployEventer deploys a new Ethereum contract, binding an instance of Eventer to it.
 func DeployEventer(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *Eventer, error) {
@@ -192,6 +193,32 @@ func (_Eventer *EventerTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.
 // Transact invokes the (paid) contract method with params as input values.
 func (_Eventer *EventerTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
 	return _Eventer.Contract.contract.Transact(opts, method, params...)
+}
+
+// BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
+//
+// Solidity: function balanceOf(address account) constant returns(uint256)
+func (_Eventer *EventerCaller) BalanceOf(opts *bind.CallOpts, account common.Address) (*big.Int, error) {
+	var (
+		ret0 = new(*big.Int)
+	)
+	out := ret0
+	err := _Eventer.contract.Call(opts, out, "balanceOf", account)
+	return *ret0, err
+}
+
+// BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
+//
+// Solidity: function balanceOf(address account) constant returns(uint256)
+func (_Eventer *EventerSession) BalanceOf(account common.Address) (*big.Int, error) {
+	return _Eventer.Contract.BalanceOf(&_Eventer.CallOpts, account)
+}
+
+// BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
+//
+// Solidity: function balanceOf(address account) constant returns(uint256)
+func (_Eventer *EventerCallerSession) BalanceOf(account common.Address) (*big.Int, error) {
+	return _Eventer.Contract.BalanceOf(&_Eventer.CallOpts, account)
 }
 
 // Transfer is a paid mutator transaction binding the contract method 0xa9059cbb.
