@@ -23,6 +23,7 @@ vendor:
 abi:
 	./_assets/solc.sh ./build/ $(shell pwd)/solidity/ $(shell pwd)/solidity/contracts/NativeBridge.sol
 	./_assets/solc.sh ./build/ $(shell pwd)/solidity/ $(shell pwd)/solidity/contracts/NativeProxy.sol
+	./_assets/solc.sh ./build/ $(shell pwd)/solidity/ $(shell pwd)/solidity/contracts/RemoteBridge.sol
 
 .PHONY: images
 images:

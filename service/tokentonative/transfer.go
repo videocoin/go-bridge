@@ -48,6 +48,7 @@ func (e *TransferEngine) Execute(ctx context.Context, transfers []service.Transf
 		}
 
 		opts := e.txOpts
+		opts.Context = ctx
 		balance, err := e.client.BalanceAt(ctx, opts.From, nil)
 		if err != nil {
 			return err
