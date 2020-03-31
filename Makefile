@@ -19,6 +19,11 @@ vendor:
 	go mod vendor
 	modvendor -copy="**/*.c **/*.h" -v
 
+.PHONY: abi
+abi:
+	./_assets/solc.sh ./build/ $(shell pwd)/solidity/ $(shell pwd)/solidity/contracts/NativeBridge.sol
+	./_assets/solc.sh ./build/ $(shell pwd)/solidity/ $(shell pwd)/solidity/contracts/NativeProxy.sol
+
 .PHONY: images
 images:
 	docker build -t ${REGISTRY}/bridge/bridge:$(VERSION) -f _assets/Dockerfile .

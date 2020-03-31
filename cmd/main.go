@@ -20,8 +20,9 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
 	"github.com/videocoin/go-bridge/erc20"
-	"github.com/videocoin/go-bridge/homebridge"
+	"github.com/videocoin/go-bridge/nativebridge"
 	"github.com/videocoin/go-bridge/service"
+	"github.com/videocoin/go-bridge/service/tokentonative"
 )
 
 var (
@@ -130,20 +131,19 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	bridge, err := homebridge.NewHomeBridge(conf.BridgeAdderss, lclient)
+	bridge, err := nativebridge.NewNativeBridge(conf.BridgeAdderss, lclient)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 	opts := bind.NewKeyedTransactor(key.PrivateKey)
-	svc := service.NewService(
-		log, lclient, fclient,
-		erc,
+
+	engine := tokentonative.NewTransferEngine(log, lclient, *opts, bridge)
+	svc := service.NewService(log, fclient,
+		engine,
+		engine,
+		tokentonative.NewERC20Access(log, erc),
 		service.StaticSource(conf.Banks),
-		service.NilSource{},
-		*opts,
-		bridge,
-		conf.BlockDelay,
-		conf.ScanStep,
+		conf.BlockDelay, conf.ScanStep,
 	)
 
 	ctx, cancel := context.WithCancel(context.Background())
