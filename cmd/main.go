@@ -38,12 +38,13 @@ type Config struct {
 	ForeignChainRPC string
 
 	ERC20Address  common.Address
-	BridgeAdderss common.Address
+	BridgeAddress common.Address
 
 	LogLevel string
 
-	BlockDelay *big.Int
-	ScanStep   *big.Int
+	BlockDelay        *big.Int
+	ScanStep          *big.Int
+	ScanPeriodSeconds int64
 
 	Banks []common.Address
 }
@@ -114,7 +115,13 @@ func main() {
 	conf := parseConfig()
 
 	logger := logrus.New()
-	logger.SetLevel(logrus.ErrorLevel)
+	lvl, err := logrus.ParseLevel(conf.LogLevel)
+	if err != nil {
+		fmt.Printf("failed to parse level %s: %v", conf.LogLevel, err)
+		os.Exit(1)
+	}
+
+	logger.SetLevel(lvl)
 	log := logrus.NewEntry(logger)
 
 	key := decryptKey(log, *keypath, *pwpath)
@@ -131,7 +138,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	bridge, err := nativebridge.NewNativeBridge(conf.BridgeAdderss, lclient)
+	bridge, err := nativebridge.NewNativeBridge(conf.BridgeAddress, lclient)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -153,5 +160,8 @@ func main() {
 		<-sigint
 		cancel()
 	}()
-	_ = service.PollForever(ctx, 3*time.Second, 20*time.Minute, func(ctx context.Context) { _ = svc.Run(ctx) })
+	period := time.Duration(conf.ScanPeriodSeconds) * time.Second
+	log.Infof("bridge is started. scan period %v", period)
+	_ = service.PollForever(ctx, period, 10*time.Minute, func(ctx context.Context) { _ = svc.Run(ctx) })
+	log.Infof("bridge stopped")
 }
