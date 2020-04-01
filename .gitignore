@@ -2,3 +2,4 @@ vendor/
 build/
 .out
 node_modules/
+key*.json

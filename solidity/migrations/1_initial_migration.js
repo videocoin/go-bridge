@@ -5,5 +5,5 @@ const NativeProxy = artifacts.require("NativeProxy");
 module.exports = function(deployer) {
   deployer.deploy(Migrations);
   deployer.deploy(NativeBridge);
-  deployed.deploy(NativeProxy);
+  deployer.deploy(NativeProxy);
 };

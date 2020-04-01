@@ -1,0 +1,14 @@
+{
+    "LocalChainRPC": "https://dev1:D6msEL93LJT5RaPk@rpc.dev.kili.videocoin.network",
+    "ForeignChainRPC": "https://mainnet.infura.io/v3/f51239179fb54a6f8396a208d53d37f4",
+    "ERC20Address": "0x2C9023bBc572ff8dc1228c7858A280046Ea8C9E5",
+    "BridgeAddress": "0xB269eA0cc5270dF258B5e4c4Fdc7F35E50cb91Ae",
+    "LogLevel": "debug",
+    "BlockDelay": 10,
+    "ScanStep": 1000000,
+    "ScanPeriodSeconds": 10,
+    "Banks": [
+        "0x218431C2e6B7A8d6aF5eF18F3Ad63B23c614889F",
+        "0x547348577c88c6cc11716162b3c4c5898f67dd20"
+    ]
+}
