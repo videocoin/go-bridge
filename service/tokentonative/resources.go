@@ -42,6 +42,16 @@ func (e *ERC20Access) Transfers(ctx context.Context, to []common.Address, start,
 	defer filter.Close()
 	for filter.Next() {
 		if filter.Event != nil {
+			if (filter.Event.From == common.Address{}) {
+				e.log.Debugf("transfer 0x%x to zero address is skipped", filter.Event.Raw.TxHash)
+				continue
+			}
+
+			e.log.Debugf("found transfer 0x%x. to 0x%x. value %v",
+				filter.Event.Raw.TxHash,
+				filter.Event.From,
+				filter.Event.Value,
+			)
 			rst = append(rst, service.Transfer{
 				Hash:  filter.Event.Raw.TxHash,
 				To:    filter.Event.From,

@@ -36,6 +36,9 @@ type TransferEngine struct {
 func (e *TransferEngine) Execute(ctx context.Context, transfers []service.Transfer) error {
 	for i := range transfers {
 		transfer := &transfers[i]
+		e.log.Debugf("executing transfer 0x%x. to 0x%x. value %v",
+			transfer.Hash, transfer.To, transfer.Value)
+
 		executed, err := e.bridge.Transfers(
 			&bind.CallOpts{Context: ctx},
 			[32]byte(transfer.Hash))
@@ -65,7 +68,7 @@ func (e *TransferEngine) Execute(ctx context.Context, transfers []service.Transf
 			transfer.To,
 			[32]byte(transfer.Hash))
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to execute bridge transfer: %v", err)
 		}
 		receipt, err := bind.WaitMined(ctx, e.client, tx)
 		if err != nil {
@@ -76,7 +79,7 @@ func (e *TransferEngine) Execute(ctx context.Context, transfers []service.Transf
 				transfer.To, transfer.Value)
 		}
 		e.log.Infof("executed transfer. to 0x%x. value %v. gas used %d",
-			transfer.To, transfer.Value, receipt.CumulativeGasUsed)
+			transfer.To, transfer.Value, receipt.GasUsed)
 	}
 	return nil
 }
