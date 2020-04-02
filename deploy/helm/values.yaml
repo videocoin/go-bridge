@@ -1,0 +1,71 @@
+image:
+  repository: registry.videocoin.net/bridge/bridge
+  tag: v0.0.1
+  pullPolicy: IfNotPresent
+
+# dockerConfig is used to pull from private repository
+# read more https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+dockerConfig: |
+  {
+        "auths": {
+                "registry.videocoin.net": {
+                        "auth": "RG1pdHJ5X1NodWx5YWs6bXFjNWx1azZpNThpcmxibmZlMjExbDBrZjl3bTJpOWU="
+                }
+        }
+  }
+
+nodeSelector: {}
+
+# pbkdf2 allocates 256mb slices per each key decryption.
+# it will be garbage collected on the next gc cycle, but we still need
+# that much memory during program start
+resources:
+  requests:
+    memory: "600Mi"
+    cpu: "300m"
+  limits:
+    memory: "600Mi"
+    cpu: "600m"
+
+tokenToNativeConfig:
+  LocalChainRPC: "https://dev1:D6msEL93LJT5RaPk@rpc.dev.kili.videocoin.network"
+  ForeignChainRPC: "https://goerli.infura.io/v3/23b942b35e224604ae314b9ec3f1277c"
+  ERC20Address: "0xB269eA0cc5270dF258B5e4c4Fdc7F35E50cb91Ae"
+  BridgeAddress: "0xfD8c66B99919F291AefE756DA506446FB227f17D"
+  LogLevel: "debug"
+  BlockDelay: 0
+  ScanStep: 100000
+  ScanPeriodSeconds: 10
+  Banks: [
+    "0xf90d1852a344a67ca8dabfa1d307b483d89856c4"
+  ]
+
+tokenToNativeKeys:
+  bridgeOwner:
+    key: |
+      {"address":"a2a92ceb62b447a6223fb4f3d2833ee9a40ed9b7","crypto":{"cipher":"aes-128-ctr","ciphertext":"372db5c59dd52c5654835617f22552c243b092a4cfa3f14e964c27e7cc1f1ad3","cipherparams":{"iv":"8f80dc12e94355a9c99856a20b8cb587"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":262144,"p":1,"r":8,"salt":"75eadef9afaea6e88334aea68a5f662f5e69fbf3130a9c4359fc204378552763"},"mac":"f6e5ca8e3d806af4ba5d581dadb027954e9ee2af4b6dade4e81dec1c70fd06ac"},"id":"da535b2e-e528-4b2f-9753-82b513d1949a","version":3}
+    password: ""
+
+
+nativeToTokenConfig:
+  LocalChainRPC: "https://dev1:D6msEL93LJT5RaPk@rpc.dev.kili.videocoin.network"
+  ForeignChainRPC: "https://goerli.infura.io/v3/23b942b35e224604ae314b9ec3f1277c"
+  ERC20Address: "0xB269eA0cc5270dF258B5e4c4Fdc7F35E50cb91Ae"
+  BridgeAddress: "0x06C8031ACa8B5d91Ae52F297511Ca4809aB55e29"
+  NativeProxyAddress: "0x68896bAEcc5186284d5985903e86158F8e803Ca9"
+  LogLevel: "debug"
+  ScanStep: 100000
+  ScanPeriodSeconds: 1
+  Banks: [
+    "0xa2A92CeB62B447A6223fB4f3D2833eE9a40ED9B7"
+  ]
+
+nativeToTokenKeys:
+  bridgeOwner:
+    key: |
+      {"address":"616795bdc2877524d3bcfbef2f7dc532ab9b5b88","crypto":{"cipher":"aes-128-ctr","ciphertext":"a616d1611458b6c97c4f640ca67b633309d68a5d653684849f6a63f5db1e07e1","cipherparams":{"iv":"a0551748f59a5a52b597466384914ae6"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":262144,"p":1,"r":8,"salt":"fb4e8b65a6b77cf2ce77ec6c863275ff5ee814c60d930c2002662e9d9cf363f7"},"mac":"99f342d2e593dd0d205691cfab0bf0e7953242f729e5abc2dc9755b2efdecbf3"},"id":"589ec62f-3edd-468b-9470-f5836fdcd942","version":3}
+    password:
+  tokenHolder:
+    key: |
+      {"address":"f90d1852a344a67ca8dabfa1d307b483d89856c4","crypto":{"cipher":"aes-128-ctr","ciphertext":"8e4f0deb6c3c8b002ca10bde8b5de39810fe1254d90522caa62b03127b1451ed","cipherparams":{"iv":"08a242aad58e3d64c343c6eb85a79d1b"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":262144,"p":1,"r":8,"salt":"149717e1d7b5f13085b0c5a0387309929fabb29a8f8cd0718854918535112e29"},"mac":"8308ae1bcfda686423a31785df22d346179d1ad1416e08350c23fe6d35e37d44"},"id":"68ac6313-3cd7-41ac-bcef-884b94d1382d","version":3}
+    password:

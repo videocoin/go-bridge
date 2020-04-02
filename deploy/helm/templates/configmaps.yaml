@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-tokentonative
+  labels:
+    app: {{ .Release.Name }}
+    component: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+data:
+  config.json: |
+{{ toJson .Values.tokenToNativeConfig | indent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-nativetotoken
+  labels:
+    app: {{ .Release.Name }}
+    component: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+data:
+  config.json: |
+{{ toJson .Values.nativeToTokenConfig | indent 4 }}

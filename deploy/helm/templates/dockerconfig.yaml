@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/dockerconfigjson
+metadata:
+  name: {{ .Release.Name }}-dockerconfig
+  labels:
+    app: {{ .Release.Name }}
+    component: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+data:
+  .dockerconfigjson: |
+    {{ .Values.dockerConfig | b64enc }}
