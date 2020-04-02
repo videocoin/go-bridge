@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-tokentonative
+  labels:
+    app: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-tokentonative
+  template:
+    metadata:
+      name: {{ .Release.Name }}
+      labels:
+        app: {{ .Release.Name }}-tokentonative
+    spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ .Release.Name }}-tokentonative
+        - name: keys-volume
+          secret:
+            secretName: {{ .Release.Name }}-tokentonative
+      imagePullSecrets:
+        - name: {{ .Release.Name }}-dockerconfig
+      containers:
+        - name: tokentonative
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+            - name: keys-volume
+              mountPath: /etc/keys
+          args:
+            - token2native
+            - -c /etc/config/config.json
+            - -k /etc/keys/bridgeOwnerKey
+            {{ if .Values.tokenToNativeKeys.bridgeOwner.password }}
+            - -p /etc/keys/bridgeOwnerPassword
+            {{ end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{ if .Values.resources }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          {{ end }}
+{{ if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 12 }}
+      {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-nativetotoken
+  labels:
+    app: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-nativetotoken
+  template:
+    metadata:
+      name: {{ .Release.Name }}
+      labels:
+        app: {{ .Release.Name }}-nativetotoken
+    spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ .Release.Name }}-nativetotoken
+        - name: keys-volume
+          secret:
+            secretName: {{ .Release.Name }}-nativetotoken
+      imagePullSecrets:
+        - name: {{ .Release.Name }}-dockerconfig
+      containers:
+        - name: nativetotoken
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+            - name: keys-volume
+              mountPath: /etc/keys
+          args:
+            - native2token
+            - -c /etc/config/config.json
+            - --bridgekey=/etc/keys/bridgeOwnerKey
+            {{ if .Values.nativeToTokenKeys.bridgeOwner.password }}
+            - --bridgepw=/etc/keys/bridgeOwnerPassword
+            {{ end }}
+            - --tokenkey=/etc/keys/tokenHolderKey
+            {{ if .Values.nativeToTokenKeys.tokenHolder.password }}
+            - --tokenpw=/etc/keys/tokenHolderPassword
+            {{ end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{ if .Values.resources }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          {{ end }}
+{{ if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 12 }}
+      {{- end }}
