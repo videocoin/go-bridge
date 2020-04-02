@@ -117,6 +117,7 @@ func (e *TransferEngine) Execute(ctx context.Context, transfers []service.Transf
 			return err
 		}
 
+		e.log.Debugf("waiting for 0x%x to get mined as 0x%x", transfer.Hash, tx.Hash())
 		receipt, err := bind.WaitMined(ctx, e.rclient, tx)
 		if err != nil {
 			return err
@@ -126,7 +127,7 @@ func (e *TransferEngine) Execute(ctx context.Context, transfers []service.Transf
 				transfer.To, transfer.Value)
 		}
 		e.log.Infof("executed transfer. to 0x%x. value %v. gas used %d",
-			transfer.To, transfer.Value, receipt.CumulativeGasUsed)
+			transfer.To, transfer.Value, receipt.GasUsed)
 	}
 	return nil
 }

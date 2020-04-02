@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -100,7 +101,7 @@ func (s *Service) Run(ctx context.Context) error {
 		s.log.Debugf("nothing to scan. start %v. end %v", start, end)
 		return nil
 	}
-	s.log.Debugf("running scan for erc20 transfers. start %v. end %v", start, end)
+	s.log.Debugf("running scan for transfers. start %v. end %v", start, end)
 	to, err := s.banks.All(ctx)
 	if err != nil {
 		return err
@@ -117,5 +118,8 @@ func (s *Service) Run(ctx context.Context) error {
 	if err := s.engine.Execute(ctx, transfers); err != nil {
 		return err
 	}
-	return s.lastBlock.Set(ctx, end)
+	if err := s.lastBlock.Set(ctx, end); err != nil {
+		return fmt.Errorf("failed to set known block %v: %v", end, err)
+	}
+	return nil
 }

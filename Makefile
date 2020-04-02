@@ -1,4 +1,4 @@
-REGISTRY=registry.dev.videocoin.net/bridge
+REGISTRY=registry.videocoin.net/bridge
 VERSION ?= dev
 
 .PHONY: generate
@@ -27,11 +27,11 @@ abi:
 
 .PHONY: images
 images:
-	docker build -t ${REGISTRY}/bridge/bridge:$(VERSION) -f _assets/Dockerfile .
+	docker build -t ${REGISTRY}/bridge:$(VERSION) -f _assets/Dockerfile .
 
 .PHONY: push
 push:
-	docker push ${REGISTRY}/bridge/bridge:$(VERSION)
+	docker push ${REGISTRY}/bridge:$(VERSION)
 
 
 .PHONY: test

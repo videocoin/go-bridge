@@ -2,12 +2,12 @@
     "LocalChainRPC": "https://dev1:D6msEL93LJT5RaPk@rpc.dev.kili.videocoin.network",
     "ForeignChainRPC": "https://goerli.infura.io/v3/23b942b35e224604ae314b9ec3f1277c",
     "ERC20Address": "0xB269eA0cc5270dF258B5e4c4Fdc7F35E50cb91Ae",
-    "BridgeAddress": "0xfD8c66B99919F291AefE756DA506446FB227f17D",
+    "BridgeAddress": "0x06C8031ACa8B5d91Ae52F297511Ca4809aB55e29",
+    "NativeProxyAddress": "0x68896bAEcc5186284d5985903e86158F8e803Ca9",
     "LogLevel": "debug",
-    "BlockDelay": 0,
     "ScanStep": 100000,
-    "ScanPeriodSeconds": 10,
+    "ScanPeriodSeconds": 1,
     "Banks": [
-        "0xf90d1852a344a67ca8dabfa1d307b483d89856c4"
+        "0xa2A92CeB62B447A6223fB4f3D2833eE9a40ED9B7"
     ]
 }
