@@ -30,7 +30,7 @@ resources:
 tokenToNativeConfig:
   LocalChainRPC: "https://dev1:D6msEL93LJT5RaPk@rpc.dev.kili.videocoin.network"
   ForeignChainRPC: "https://goerli.infura.io/v3/23b942b35e224604ae314b9ec3f1277c"
-  ERC20Address: "0xB269eA0cc5270dF258B5e4c4Fdc7F35E50cb91Ae"
+  ERC20Address: "0x7bc345BE17AF288a0CFcFF8E673714635C847aa0"
   BridgeAddress: "0xfD8c66B99919F291AefE756DA506446FB227f17D"
   LogLevel: "debug"
   BlockDelay: 0
@@ -50,7 +50,7 @@ tokenToNativeKeys:
 nativeToTokenConfig:
   LocalChainRPC: "https://dev1:D6msEL93LJT5RaPk@rpc.dev.kili.videocoin.network"
   ForeignChainRPC: "https://goerli.infura.io/v3/23b942b35e224604ae314b9ec3f1277c"
-  ERC20Address: "0xB269eA0cc5270dF258B5e4c4Fdc7F35E50cb91Ae"
+  ERC20Address: "0x7bc345BE17AF288a0CFcFF8E673714635C847aa0"
   BridgeAddress: "0x06C8031ACa8B5d91Ae52F297511Ca4809aB55e29"
   NativeProxyAddress: "0x68896bAEcc5186284d5985903e86158F8e803Ca9"
   LogLevel: "debug"

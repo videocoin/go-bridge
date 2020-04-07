@@ -10,8 +10,8 @@ with a 100 000 requests/day limit.
 
 #### ERC20
 
-- Address: 0xB269eA0cc5270dF258B5e4c4Fdc7F35E50cb91Ae
-  Etherscan: https://goerli.etherscan.io/address/0xB269eA0cc5270dF258B5e4c4Fdc7F35E50cb91Ae
+- Address: 0x7bc345BE17AF288a0CFcFF8E673714635C847aa0
+  Etherscan: https://goerli.etherscan.io/address/0x7bc345BE17AF288a0CFcFF8E673714635C847aa0
 - Bank: 0xf90d1852a344a67ca8dabfa1d307b483d89856c4
   Etherscan: https://goerli.etherscan.io/address/0xf90d1852a344a67ca8dabfa1d307b483d89856c4
 
