@@ -6,7 +6,9 @@ contract Eventer {
 
     mapping (address => uint256) private balances;
 
-    constructor() public {}
+    constructor() public {
+      balances[msg.sender] = 100e18;
+    }
 
     function balanceOf(address account) external view returns (uint256) {
       return balances[account];

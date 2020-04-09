@@ -81,7 +81,7 @@ func (s *Service) getRange(ctx context.Context) (*big.Int, *big.Int, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	safe := head.Number.Sub(head.Number, s.blockDelay)
+	safe := new(big.Int).Sub(head.Number, s.blockDelay)
 	end := new(big.Int).Add(start, s.scanStep)
 	// IF START=1, END=5, SAFE=10 RETURN 1, 5
 	if safe.Cmp(end) >= 0 {
