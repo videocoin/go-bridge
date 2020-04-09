@@ -1,6 +1,7 @@
 package testtools
 
 import (
+	"crypto/ecdsa"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -14,9 +15,10 @@ import (
 
 type Suite struct {
 	suite.Suite
-	FundedKeys []*bind.TransactOpts
-	Backend    *backends.SimulatedBackend
-	ERC20      *erc20.ERC20
+	FundedKeys        []*bind.TransactOpts
+	FundedPrivateKeys []*ecdsa.PrivateKey
+	Backend           *backends.SimulatedBackend
+	ERC20             *erc20.ERC20
 }
 
 func (s *Suite) SetupTest() {
@@ -26,6 +28,7 @@ func (s *Suite) SetupTest() {
 		s.Require().NoError(err)
 		opts := bind.NewKeyedTransactor(pkey)
 		s.FundedKeys = append(s.FundedKeys, opts)
+		s.FundedPrivateKeys = append(s.FundedPrivateKeys, pkey)
 		alloc[opts.From] = core.GenesisAccount{Balance: new(big.Int).SetUint64(^uint64(0))}
 	}
 
@@ -40,5 +43,6 @@ func (s *Suite) SetupTest() {
 
 func (s *Suite) TearDownTest() {
 	s.FundedKeys = nil
+	s.FundedPrivateKeys = nil
 	s.NoError(s.Backend.Close()) // assert intentional to allow other destructors to execute
 }
