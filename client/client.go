@@ -83,45 +83,46 @@ type Client struct {
 // WaitDeposit will exit only if context deadline is reached or bridged transfer is found. Ensure that context
 // deadline is set to reasonable time (5m for mainnet will be plenty).
 func (c *Client) WaitDeposit(ctx context.Context, key *ecdsa.PrivateKey, bank common.Address, amount *big.Int) (info TransferInfo, err error) {
-	opts := bind.NewKeyedTransactor(key)
-	opts.Context = ctx
-	tx, err := c.erc.Transfer(opts, bank, amount)
+	header, err := c.local.HeaderByNumber(ctx, nil)
 	if err != nil {
 		return info, err
 	}
 
-	// setup events watcher on local chain
-	// must be initialized before erc transfer is mined to account for very fast
-	// confirmations and execution of bridge transfer
-	sink := make(chan *nativebridge.NativeBridgeTransferBridged, 1)
-	sub, err := c.localBridge.WatchTransferBridged(
-		&bind.WatchOpts{Context: ctx}, sink,
-		nil, nil, [][32]byte{[32]byte(tx.Hash())})
+	hash, err := c.Deposit(ctx, key, bank, amount)
 	if err != nil {
 		return info, err
 	}
-	defer sub.Unsubscribe()
-
-	// wait for erc20 on foreign chain to succeed
-	receipt, err := bind.WaitMined(ctx, c.foreign, tx)
-	if err != nil {
-		return info, err
-	}
-	if receipt.Status == types.ReceiptStatusFailed {
-		return info, fmt.Errorf("token transfer 0x%x failed to execute", tx.Hash())
-	}
-
+	info.ForeignTxHash = hash
 	// bridge waits for sufficient number of confirmations (blocks on top) before creating bridged transfer on local chain.
 	// waiting may take 2-3 minutes.
-	select {
-	case <-ctx.Done():
-		return info, ctx.Err()
-	case err := <-sub.Err():
-		return info, err
-	case event := <-sink:
-		info.ForeignTxHash = tx.Hash()
-		info.LocalTxHash = event.Raw.TxHash
-		return info, nil
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ctx.Done():
+			return info, ctx.Err()
+		case <-ticker.C:
+			ok, err := c.IsDepositBridged(ctx, hash)
+			if err != nil {
+				continue
+			}
+			if !ok {
+				continue
+			}
+			events, err := c.localBridge.FilterTransferBridged(&bind.FilterOpts{
+				Context: ctx,
+				Start:   header.Number.Uint64(),
+			}, nil, nil, [][32]byte{hash})
+			if err != nil {
+				continue
+			}
+			for events.Next() {
+				info.LocalTxHash = events.Event.Raw.TxHash
+				_ = events.Close()
+				return info, nil
+			}
+			_ = events.Close()
+		}
 	}
 }
 
