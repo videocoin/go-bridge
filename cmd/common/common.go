@@ -50,7 +50,7 @@ func MustDecryptKey(log *logrus.Entry, path, pwpath string) *keystore.Key {
 		log.Fatal(err.Error())
 	}
 	password := ""
-	if len(password) != 0 {
+	if len(pwpath) != 0 {
 		f, err = os.Open(pwpath)
 		if err != nil {
 			log.Fatalf("can't open %s: %v", pwpath, err)
