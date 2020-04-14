@@ -18,8 +18,8 @@
  *
  */
 
-const HDWalletProvider = require("truffle-hdwallet-provider");
-const fs = require('fs');
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+const fs = require("fs");
 const mnemonic = fs.readFileSync("testowner.json").toString().trim();
 
 module.exports = {
@@ -34,19 +34,43 @@ module.exports = {
    */
 
   networks: {
-      kilidev: {
-          provider: function() {
-              return new HDWalletProvider(mnemonic, "https://dev1:D6msEL93LJT5RaPk@rpc.dev.kili.videocoin.network")
-          },
-          gas: 4000000,
-          network_id: 341988222
-      }
+    kilidev: {
+      provider: function () {
+        return new HDWalletProvider(
+          mnemonic,
+          "https://dev1:D6msEL93LJT5RaPk@rpc.dev.kili.videocoin.network"
+        );
+      },
+      gas: 4000000,
+      network_id: 341988222,
+    },
+    everestdev: {
+      provider: function () {
+        var priv;
+        try {
+          priv = fs.readFileSync("/vault/secrets/bridge.priv");
+        } catch (err) {
+          if (err.code === "ENOENT") {
+            console.log("File not found!");
+          } else {
+            throw err;
+          }
+        }
+
+        return new HDWalletProvider(
+          priv.toString().trim(),
+          "http://symphony-geth-archiver:8545"
+        );
+      },
+      gas: 4000000,
+      network_id: 87654,
+    },
   },
 
   // Configure your compilers
   compilers: {
     solc: {
-        version: "0.5.16"
-    }
-  }
-}
+      version: "0.5.16",
+    },
+  },
+};
