@@ -60,7 +60,9 @@ func MustDecryptKey(log *logrus.Entry, path, pwpath string) *keystore.Key {
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		password = string(data)
+		password = strings.TrimRightFunc(string(data), func(r rune) bool {
+			return r == '\r' || r == '\n'
+		})
 	}
 	key, err := keystore.DecryptKey(data, password)
 	if err != nil {
