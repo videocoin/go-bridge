@@ -1,3 +1,5 @@
+// +build !prometheus
+
 package service
 
 import "github.com/go-kit/kit/metrics/discard"

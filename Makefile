@@ -1,5 +1,6 @@
 REGISTRY=registry.videocoin.net/bridge
 VERSION ?= dev
+TAGS ?= prometheus
 
 .PHONY: generate
 generate:
@@ -7,11 +8,11 @@ generate:
 
 .PHONY: build
 build:
-	go build -o ./build/bridge ./cmd/
+	go build -tags=$(TAGS) -o ./build/bridge ./cmd/
 
 .PHONY: build-vendor
 build-vendor:
-	go build -o ./build/bridge -mod=vendor ./cmd/
+	go build -tags=$(TAGS) -o ./build/bridge -mod=vendor ./cmd/
 
 .PHONY: vendor
 vendor:
