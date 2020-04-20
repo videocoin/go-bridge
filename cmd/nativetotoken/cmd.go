@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"sync"
 	"syscall"
 	"time"
 
@@ -37,6 +38,9 @@ type config struct {
 
 	ScanStep          *big.Int
 	ScanPeriodSeconds int64
+
+	EnablePrometheus   bool
+	PrometheusListener string
 
 	Banks []ethcommon.Address
 }
@@ -118,12 +122,40 @@ func Command() *cobra.Command {
 			}()
 			period := time.Duration(conf.ScanPeriodSeconds) * time.Second
 			log.Infof("bridge is started. scan period %v", period)
-			_ = service.PollForever(ctx, period, 10*time.Minute, func(ctx context.Context) {
-				err := svc.Run(ctx)
+
+			var (
+				errors = make(chan error, 2)
+				wg     sync.WaitGroup
+			)
+
+			if conf.EnablePrometheus {
+				wg.Add(1)
+				go func() {
+					log.Infof("started prometheus on %s", conf.PrometheusListener)
+					errors <- common.BootstrapPrometheus(ctx, conf.PrometheusListener)
+					wg.Done()
+				}()
+			}
+
+			wg.Add(1)
+			go func() {
+				errors <- service.PollForever(ctx, period, 10*time.Minute, func(ctx context.Context) {
+					err := svc.Run(ctx)
+					if err != nil {
+						log.Debugf("poll failed with %v", err)
+					}
+				})
+				wg.Done()
+			}()
+			go func() {
+				wg.Wait()
+				close(errors)
+			}()
+			for err := range errors {
 				if err != nil {
-					log.Debugf("poll failed with %v", err)
+					log.Fatal(err.Error())
 				}
-			})
+			}
 			log.Infof("bridge stopped")
 		},
 	}
