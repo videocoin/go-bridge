@@ -6,6 +6,7 @@ import (
 	"math/big"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 	"time"
 
@@ -19,10 +20,12 @@ import (
 	"github.com/videocoin/go-bridge/nativeproxy"
 	"github.com/videocoin/go-bridge/remotebridge"
 	"github.com/videocoin/go-bridge/service"
+	"github.com/videocoin/go-bridge/service/blocks"
 	"github.com/videocoin/go-bridge/service/nativetotoken"
 )
 
 type config struct {
+	DataDir         string
 	LocalChainRPC   string
 	ForeignChainRPC string
 
@@ -89,13 +92,18 @@ func Command() *cobra.Command {
 				log.Fatalf(err.Error())
 			}
 
+			blocks, err := blocks.NewWriterBlockResource(log, filepath.Join(conf.DataDir, "last_block_n2t"))
+			if err != nil {
+				log.Fatalf(err.Error())
+			}
+
 			engine := nativetotoken.NewTransferEngine(log,
 				lclient, fclient,
 				*bridgeopts, *tokenopts,
 				bridge, erc)
 			svc := service.NewService(log, lclient,
 				engine,
-				engine,
+				blocks,
 				nativetotoken.NewNativeTransferAccess(log, proxy),
 				service.StaticSource(conf.Banks),
 				big.NewInt(0), conf.ScanStep,

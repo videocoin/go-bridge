@@ -6,6 +6,7 @@ import (
 	"math/big"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 	"time"
 
@@ -18,10 +19,12 @@ import (
 	"github.com/videocoin/go-bridge/erc20"
 	"github.com/videocoin/go-bridge/nativebridge"
 	"github.com/videocoin/go-bridge/service"
+	"github.com/videocoin/go-bridge/service/blocks"
 	"github.com/videocoin/go-bridge/service/tokentonative"
 )
 
 type config struct {
+	DataDir         string
 	LocalChainRPC   string
 	ForeignChainRPC string
 
@@ -78,10 +81,15 @@ func Command() *cobra.Command {
 			}
 			opts := bind.NewKeyedTransactor(key.PrivateKey)
 
+			blocks, err := blocks.NewWriterBlockResource(log, filepath.Join(conf.DataDir, "last_block_t2n"))
+			if err != nil {
+				log.Fatalf(err.Error())
+			}
+
 			engine := tokentonative.NewTransferEngine(log, lclient, *opts, bridge)
 			svc := service.NewService(log, fclient,
 				engine,
-				engine,
+				blocks,
 				tokentonative.NewERC20Access(log, erc),
 				service.StaticSource(conf.Banks),
 				conf.BlockDelay, conf.ScanStep,
