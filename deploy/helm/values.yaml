@@ -27,7 +27,10 @@ resources:
     memory: "600Mi"
     cpu: "600m"
 
+volumeSize: 64Mi
+
 tokenToNativeConfig:
+  DataDir: "/var/t2n"
   LocalChainRPC: "https://dev1:D6msEL93LJT5RaPk@rpc.dev.kili.videocoin.network"
   ForeignChainRPC: "https://goerli.infura.io/v3/23b942b35e224604ae314b9ec3f1277c"
   ERC20Address: "0x7bc345BE17AF288a0CFcFF8E673714635C847aa0"
@@ -48,6 +51,7 @@ tokenToNativeKeys:
 
 
 nativeToTokenConfig:
+  DataDir: "/var/n2t"
   LocalChainRPC: "https://dev1:D6msEL93LJT5RaPk@rpc.dev.kili.videocoin.network"
   ForeignChainRPC: "https://goerli.infura.io/v3/23b942b35e224604ae314b9ec3f1277c"
   ERC20Address: "0x7bc345BE17AF288a0CFcFF8E673714635C847aa0"

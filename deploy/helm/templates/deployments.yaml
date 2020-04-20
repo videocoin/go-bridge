@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}-tokentonative
   labels:
@@ -7,11 +7,18 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 spec:
   replicas: 1
-  strategy:
-    type: Recreate
+  serviceName: {{ .Release.Name }}-tokentonative
   selector:
     matchLabels:
       app: {{ .Release.Name }}-tokentonative
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.volumeSize }}
   template:
     metadata:
       name: {{ .Release.Name }}
@@ -34,6 +41,8 @@ spec:
               mountPath: /etc/config
             - name: keys-volume
               mountPath: /etc/keys
+            - name: data
+              mountPath: {{ .Values.tokenToNativeConfig.DataDir }}
           args:
             - token2native
             - -c /etc/config/config.json
@@ -53,7 +62,7 @@ spec:
       {{- end }}
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}-nativetotoken
   labels:
@@ -61,11 +70,18 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 spec:
   replicas: 1
-  strategy:
-    type: Recreate
+  serviceName: {{ .Release.Name }}-tokentonative
   selector:
     matchLabels:
       app: {{ .Release.Name }}-nativetotoken
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.volumeSize }}
   template:
     metadata:
       name: {{ .Release.Name }}
@@ -88,6 +104,8 @@ spec:
               mountPath: /etc/config
             - name: keys-volume
               mountPath: /etc/keys
+            - name: data
+              mountPath: {{ .Values.nativeToTokenConfig.DataDir }}
           args:
             - native2token
             - -c /etc/config/config.json
