@@ -62,6 +62,24 @@ func (s *EngineSuite) TestOutOfBalance() {
 	s.True(errors.Is(err, service.ErrBankOutOfBalance))
 }
 
+func (s *EngineSuite) TestExceedsAllowance() {
+	engine := NewTransferEngine(
+		s.log,
+		s.Backend, s.Backend,
+		*s.FundedKeys[7], *s.FundedKeys[0],
+		s.bridge, s.ERC20,
+	)
+	ctx := context.Background()
+	err := engine.Execute(ctx, []service.Transfer{
+		{
+			Hash:  common.Hash{1},
+			To:    common.Address{1, 1},
+			Value: big.NewInt(100),
+		},
+	})
+	s.True(service.IsErrExceedsAllowance(err))
+}
+
 func (s *EngineSuite) TestExecuted() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
