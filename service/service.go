@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math/big"
 
@@ -92,6 +93,15 @@ func (s *Service) getRange(ctx context.Context) (*big.Int, *big.Int, error) {
 }
 
 func (s *Service) Run(ctx context.Context) error {
+	UpGauge.Set(1)
+	if err := s.run(ctx); err != nil {
+		FailingGauge.Set(1)
+		return err
+	}
+	return nil
+}
+
+func (s *Service) run(ctx context.Context) error {
 	start, end, err := s.getRange(ctx)
 	if err != nil {
 		s.log.Errorf("failed to to get scan range. err %v", err)
@@ -113,6 +123,12 @@ func (s *Service) Run(ctx context.Context) error {
 
 	transfers, err := s.transfers.Transfers(ctx, to, start.Uint64(), end.Uint64())
 	if err != nil {
+		if errors.Is(err, ErrBankOutOfBalance) {
+			OutOfBalance.Set(1)
+		}
+		if IsErrExceedsAllowance(err) {
+			GasExceedsAllowance.Set(1)
+		}
 		return err
 	}
 	if err := s.engine.Execute(ctx, transfers); err != nil {
