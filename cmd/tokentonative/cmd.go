@@ -53,7 +53,7 @@ func Command() *cobra.Command {
 		Short: "Bridge from erc20 token to native coin.",
 		Run: func(cmd *cobra.Command, args []string) {
 			conf := config{}
-			common.MustParseConfig(&conf, confpath)
+			common.MustParseConfig(&conf, "t2n", confpath)
 
 			logger := logrus.New()
 			lvl, err := logrus.ParseLevel(conf.LogLevel)
