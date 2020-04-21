@@ -7,7 +7,8 @@ import (
 
 var (
 	// ErrBankOutOfBalance raised if bank doesn't have enough balance to cover transaction.
-	ErrBankOutOfBalance = errors.New("bank out of balance")
+	ErrBankOutOfBalance    = errors.New("bank out of balance")
+	ErrTransactionReverted = errors.New("tx reverted")
 )
 
 const (

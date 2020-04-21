@@ -2,6 +2,7 @@ package nativetotoken
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math/big"
 
@@ -83,16 +84,21 @@ func (e *TransferEngine) execute(opts *bind.TransactOpts, transfer *service.Tran
 		known, pending, err := e.rclient.TransactionByHash(opts.Context, common.Hash(registered.Hash))
 		if known != nil || pending {
 			e.log.Debugf("transfer 0x%x is known by remote blockchain", registered.Hash)
-			if err := e.waitMined(opts.Context, transfer, known); err != nil {
+			err := e.waitMined(opts.Context, transfer, known)
+			if err == nil {
+				return nil
+			}
+			if !errors.Is(err, service.ErrTransactionReverted) {
+				return nil
+			}
+			e.log.Debugf("transfer 0x%x is reverted. will be resubmitted.", registered.Hash)
+		} else {
+			if err != nil && err != ethereum.NotFound {
 				return err
 			}
-			return nil
+			e.log.Debugf("transfer 0x%x is missing in remote blockchain. will be resubmitted",
+				registered.Hash)
 		}
-		if err != nil && err != ethereum.NotFound {
-			return err
-		}
-		e.log.Debugf("transfer 0x%x is missing in remote blockchain. will be resubmitted",
-			registered.Hash)
 	}
 
 	balance, err := e.erc20.BalanceOf(&bind.CallOpts{Context: opts.Context}, opts.From)
@@ -133,8 +139,8 @@ func (e *TransferEngine) waitMined(ctx context.Context, transfer *service.Transf
 		return err
 	}
 	if receipt.Status != types.ReceiptStatusSuccessful {
-		return fmt.Errorf("failed to execute transfer. recipient 0x%x. value %v",
-			transfer.To, transfer.Value)
+		return fmt.Errorf("%w: failed to execute transfer. recipient 0x%x. value %v",
+			service.ErrTransactionReverted, transfer.To, transfer.Value)
 	}
 	e.log.Infof("transfer was completed. to 0x%x. value %v. gas used %d",
 		transfer.To, transfer.Value, receipt.GasUsed)
