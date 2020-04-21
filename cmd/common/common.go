@@ -9,10 +9,17 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/keystore"
+	"github.com/kelseyhightower/envconfig"
 	"github.com/sirupsen/logrus"
 )
 
-func MustParseConfig(conf interface{}, path string) {
+func MustParseConfig(conf interface{}, prefix, path string) {
+	if len(path) == 0 {
+		if err := envconfig.Process(prefix, conf); err != nil {
+			fmt.Printf("failed to get config from env: %v", err)
+			os.Exit(1)
+		}
+	}
 	f, err := os.Open(MaybeSymlink(path))
 	if err != nil {
 		fmt.Printf("can't open config at %s. err %v\n", path, err)
