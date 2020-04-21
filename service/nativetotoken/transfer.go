@@ -99,6 +99,8 @@ func (e *TransferEngine) execute(opts *bind.TransactOpts, transfer *service.Tran
 	if err != nil {
 		return err
 	}
+	metric, _ := new(big.Float).SetInt(balance).Float64()
+	service.TokenBankBalanceGauge.Set(metric)
 	// less or equal to account for additional gas cost
 	if balance.Cmp(transfer.Value) <= 0 {
 		return fmt.Errorf("%w: not enough funds on bank 0x%x to make a transfer for %v",

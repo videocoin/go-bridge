@@ -64,10 +64,11 @@ func (s *ClientSuite) SetupTest() {
 	_, err = s.ERC20.Transfer(s.FundedKeys[0], s.FundedKeys[2].From, big.NewInt(1e18))
 	s.Require().NoError(err)
 	s.Backend.Commit()
+	erctransfer, err := nativetotoken.NewTransferERC20Transactor(s.Backend, s.ERC20Address)
 	ntengine := nativetotoken.NewTransferEngine(log,
 		s.Backend, s.Backend,
 		*s.FundedKeys[0], *s.FundedKeys[2],
-		remote, s.ERC20)
+		remote, s.ERC20, erctransfer)
 	ntsvc := service.NewService(log,
 		s.Backend,
 		ntengine,

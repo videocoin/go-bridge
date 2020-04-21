@@ -56,6 +56,10 @@ func (e *TransferEngine) Execute(ctx context.Context, transfers []service.Transf
 		if err != nil {
 			return err
 		}
+
+		metric, _ := new(big.Float).SetInt(balance).Float64()
+		service.CoinBankBalanceGauge.Set(metric)
+
 		// less or equal to account for additional gas cost
 		if balance.Cmp(transfer.Value) <= 0 {
 			return fmt.Errorf("not enough funds on bank 0x%x to make a transfer for %v",
