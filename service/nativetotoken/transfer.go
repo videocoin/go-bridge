@@ -16,7 +16,7 @@ import (
 	"github.com/videocoin/go-bridge/service"
 )
 
-const erc20TransferGasLimit uint64 = 50000
+const erc20TransferGasLimit uint64 = 100000
 
 type Client interface {
 	bind.ContractBackend
