@@ -18,6 +18,7 @@ func BootstrapPrometheus(ctx context.Context, addr string) error {
 	mux := http.NewServeMux()
 	mux.Handle("/metrics", promhttp.Handler())
 	srv := &http.Server{
+		Addr:        addr,
 		ReadTimeout: promCollectTimeout,
 		Handler:     mux,
 	}

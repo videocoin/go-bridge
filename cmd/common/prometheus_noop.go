@@ -2,7 +2,9 @@
 
 package common
 
-import "context"
+import (
+	"context"
+)
 
 func BootstrapPrometheus(ctx context.Context, addr string) error {
 	return nil
