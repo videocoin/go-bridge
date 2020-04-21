@@ -32,4 +32,19 @@ func init() {
 		Name:      "failing",
 		Help:      "Is set if application fails with unexpected error.",
 	}, []string{})
+	CompletedTransfers = prometheus.NewCounterFrom(stdprometheus.CounterOpts{
+		Namespace: namespace,
+		Name:      "completed_transfers",
+		Help:      "Number of succesfully completed transfersx.",
+	}, []string{})
+	TokenBankBalanceGauge = prometheus.NewGaugeFrom(stdprometheus.GaugeOpts{
+		Namespace: namespace,
+		Name:      "token_bank_balance",
+		Help:      "Balance of the the token bank accounts.",
+	}, []string{})
+	CoinBankBalanceGauge = prometheus.NewGaugeFrom(stdprometheus.GaugeOpts{
+		Namespace: namespace,
+		Name:      "coin_bank_balance",
+		Help:      "Balance of the the coin bank accounts.",
+	}, []string{})
 }

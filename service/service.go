@@ -137,5 +137,6 @@ func (s *Service) run(ctx context.Context) error {
 	if err := s.lastBlock.Set(ctx, end); err != nil {
 		return fmt.Errorf("failed to set known block %v: %v", end, err)
 	}
+	CompletedTransfers.Add(float64(len(transfers)))
 	return nil
 }

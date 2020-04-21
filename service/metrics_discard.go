@@ -9,4 +9,7 @@ func init() {
 	OutOfBalance = discard.NewGauge()
 	GasExceedsAllowance = discard.NewGauge()
 	FailingGauge = discard.NewGauge()
+	CompletedTransfers = discard.NewCounter()
+	TokenBankBalanceGauge = discard.NewGauge()
+	CoinBankBalanceGauge = discard.NewGauge()
 }

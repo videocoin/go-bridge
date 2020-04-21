@@ -100,11 +100,14 @@ func Command() *cobra.Command {
 			if err != nil {
 				log.Fatalf(err.Error())
 			}
-
+			erctransfer, err := nativetotoken.NewTransferERC20Transactor(fclient, conf.ERC20Address)
+			if err != nil {
+				log.Fatalf(err.Error())
+			}
 			engine := nativetotoken.NewTransferEngine(log,
 				lclient, fclient,
 				*bridgeopts, *tokenopts,
-				bridge, erc)
+				bridge, erc, erctransfer)
 			svc := service.NewService(log, lclient,
 				engine,
 				blocks,
