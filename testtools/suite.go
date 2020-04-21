@@ -6,6 +6,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind/backends"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/stretchr/testify/suite"
@@ -19,6 +20,7 @@ type Suite struct {
 	FundedPrivateKeys []*ecdsa.PrivateKey
 	Backend           *backends.SimulatedBackend
 	ERC20             *erc20.ERC20
+	ERC20Address      common.Address
 }
 
 func (s *Suite) SetupTest() {
@@ -39,6 +41,7 @@ func (s *Suite) SetupTest() {
 	s.Backend.Commit()
 	s.ERC20, err = erc20.NewERC20(address, s.Backend)
 	s.Require().NoError(err)
+	s.ERC20Address = address
 }
 
 func (s *Suite) TearDownTest() {
