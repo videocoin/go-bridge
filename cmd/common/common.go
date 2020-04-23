@@ -19,6 +19,7 @@ func MustParseConfig(conf interface{}, prefix, path string) {
 			fmt.Printf("failed to get config from env: %v", err)
 			os.Exit(1)
 		}
+		return
 	}
 	f, err := os.Open(MaybeSymlink(path))
 	if err != nil {
