@@ -45,7 +45,7 @@ func main() {
 
 	goerli, err := ethclient.Dial("https://goerli.infura.io/v3/23b942b35e224604ae314b9ec3f1277c")
 	must(err)
-	vid, err := Dial(context.TODO(), "https://symphony-everest.dev.videocoin.net/",
+	vid, err := Dial(context.TODO(), "https://symphony.dev.videocoin.net/",
 		"47928468404-hfuqhrb6lhtv9sem30rkjc1djcrlpt4v.apps.googleusercontent.com",
 		"/home/dd/Downloads/videocoin-experiments-e8b4d2d00010.json",
 	)
@@ -70,7 +70,7 @@ func main() {
 
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Minute)
 	defer cancel()
-	nativebank := common.HexToAddress("0x0406a7288cd7f285f3d339b4c8c8d9a5eeab0b81")
+	nativebank := common.HexToAddress("0xb8f52379ff40fe8ca57dc60ff24cea17bce043aa")
 	info, err = client.WaitWithdraw(ctx, key.PrivateKey, nativebank, big.NewInt(77))
 	must(err)
 	fmt.Printf("Withdraw:\nAddress 0x%x\nVID tx hash 0x%x\nETH tx hash 0x%x\n",
