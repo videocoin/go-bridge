@@ -1,0 +1,6 @@
+{
+    "TokenContract": "0x7bc345BE17AF288a0CFcFF8E673714635C847aa0",
+    "LogLevel": "debug",
+    "DataDir": "/tmp/t1",
+    "URL": "https://goerli.infura.io/v3/9bd08b37cf1d465c8bf05a3ace5f9d4a"
+}

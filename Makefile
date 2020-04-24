@@ -14,6 +14,10 @@ build:
 build-vendor:
 	go build -tags=$(TAGS) -o ./build/bridge -mod=vendor ./cmd/
 
+.PHONY: tokenfct
+tokenfct:
+	go build -o ./build/tokenfct ./cmd/tools/tokenfct
+
 .PHONY: vendor
 vendor:
 	go mod tidy

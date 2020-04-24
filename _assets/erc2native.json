@@ -5,6 +5,9 @@
     "BridgeAddress": "0xfD8c66B99919F291AefE756DA506446FB227f17D",
     "LogLevel": "debug",
     "BlockDelay": 0,
+    "DataDir": "/tmp",
+    "EnablePrometheus": true,
+    "PrometheusListener": "0.0.0.0:3232",
     "ScanStep": 100000,
     "ScanPeriodSeconds": 10,
     "Banks": [
