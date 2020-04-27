@@ -30,7 +30,7 @@ var (
 		"file with owner key password. if file is not provided - app will try to decrypt with empty pw")
 	config = pflag.StringP("config", "c", "faucetcfg.json", "configuration for faucet helper")
 	num    = pflag.IntP("number", "n", 10, "number of keys to generate and to faucet (if key exist it will just fauceted)")
-	gas    = pflag.IntP("gas", "g", 10, "one unit is 1e12 wei")
+	gas    = pflag.IntP("gas", "g", 100, "one unit is 1e12 wei")
 	tokens = pflag.IntP("tokens", "t", 100, "one unit is 1e18 wei")
 
 	gasPrecision   = big.NewInt(1e12)
@@ -284,7 +284,7 @@ func (f faucet) fund(ctx context.Context, keys <-chan *ecdsa.PrivateKey, gn, tn 
 			if receipt.Status == types.ReceiptStatusFailed {
 				return fmt.Errorf("token transfer 0x%x failed", ttx.Hash())
 			}
-			f.log.Debugf("%v tokens to 0x%x were sent. tx 0x%x", tn, to, tx.Hash())
+			f.log.Debugf("%v tokens to 0x%x were sent. tx 0x%x", tn, to, ttx.Hash())
 			return nil
 		})
 		nonce++
