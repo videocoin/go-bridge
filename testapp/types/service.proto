@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package types;
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "types/types.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+
+option (gogoproto.marshaler_all) = true;
+option (gogoproto.unmarshaler_all) = true;
+option (gogoproto.sizer_all) = true;
+option (gogoproto.goproto_registration) = true;
+option (gogoproto.messagename_all) = true;
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+        info: {
+                title: "Bridge test app API";
+                version: "0.0.1";
+        };
+        schemes: HTTPS;
+        consumes: "application/json";
+        produces: "application/json";
+
+        responses: {
+                key: "400";
+                value: {
+                        description: "Returned if query is invalid.";
+                }
+        }
+
+        responses: {
+                key: "404";
+                value: {
+                        description: "Returned if transaction is not found.";
+                }
+        }
+
+        responses: {
+                key: "500";
+                value: {
+                        description: "Returned if application is in invalid state, typically if database is unavailable.";
+                }
+        }
+};
+
+service TransfersService {
+    rpc GetTransfers(TransfersRequest) returns (TransfersResponse) {
+         option (google.api.http) = {
+            get: "/api/v1/transfers"
+        };
+    }
+}
+
+message TransfersRequest {
+        int64 limit = 1;
+        int64 offset = 2;
+        string state = 3;
+        string type = 4;
+}
+
+message TransfersResponse {
+        repeated Transfer transfers = 1;
+}

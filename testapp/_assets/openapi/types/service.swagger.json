@@ -1,0 +1,112 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Bridge test app API",
+    "version": "0.0.1"
+  },
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/transfers": {
+      "get": {
+        "operationId": "GetTransfers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/typesTransfersResponse"
+            }
+          },
+          "400": {
+            "description": "Returned if query is invalid.",
+            "schema": {}
+          },
+          "404": {
+            "description": "Returned if transaction is not found.",
+            "schema": {}
+          },
+          "500": {
+            "description": "Returned if application is in invalid state, typically if database is unavailable.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "TransfersService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "typesTransfer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "state": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "localHash": {
+          "type": "string"
+        },
+        "foreignHash": {
+          "type": "string"
+        },
+        "latency": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "typesTransfersResponse": {
+      "type": "object",
+      "properties": {
+        "transfers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/typesTransfer"
+          }
+        }
+      }
+    }
+  }
+}
