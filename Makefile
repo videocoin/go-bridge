@@ -18,6 +18,10 @@ build-vendor:
 tokenfct:
 	go build -o ./build/tokenfct ./cmd/tools/tokenfct
 
+.PHONY: testapp
+testapp:
+	go build -o ./build/testapp ./cmd/testapp/
+
 .PHONY: vendor
 vendor:
 	go mod tidy

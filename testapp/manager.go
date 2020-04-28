@@ -90,16 +90,17 @@ func (m *Manager) Step(ctx context.Context) error {
 			} else {
 				info, err = m.client.WaitWithdraw(gctx, key, m.coinbank, amount)
 			}
-			completed := time.Since(start)
 			tr := Transfer{
 				Type:        actions[action],
 				LocalHash:   info.LocalTxHash,
 				ForeignHash: info.ForeignTxHash,
-				Latency:     completed,
+				Latency:     time.Since(start),
 			}
 			if err != nil {
+				m.logger.Infof("transfer finished 0x%x -> 0x%x. latency %v", tr.LocalHash, tr.ForeignHash, tr.Latency)
 				tr.State = Failed
 			} else {
+				m.logger.Errorf("%v failed 0x%x.", tr.Type, tr.LocalHash)
 				tr.State = Success
 			}
 			if err := m.db.SaveTransfer(&tr); err != nil {
