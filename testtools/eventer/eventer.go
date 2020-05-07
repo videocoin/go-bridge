@@ -37,7 +37,7 @@ var EventerFuncSigs = map[string]string{
 }
 
 // EventerBin is the compiled bytecode used for deploying new contracts.
-var EventerBin = "0x608060405234801561001057600080fd5b5033600090815260208190526040902068056bc75e2d63100000905561016e8061003b6000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c806370a082311461003b578063a9059cbb14610073575b600080fd5b6100616004803603602081101561005157600080fd5b50356001600160a01b03166100b3565b60408051918252519081900360200190f35b61009f6004803603604081101561008957600080fd5b506001600160a01b0381351690602001356100ce565b604080519115158252519081900360200190f35b6001600160a01b031660009081526020819052604090205490565b6040805182815290516000916001600160a01b0385169133917fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef919081900360200190a3506001600160a01b038216600090815260208190526040902080548201905560019291505056fea265627a7a7231582056263222d16b913c1b958d581b59482b305e13a47d06511959afcdbc367badb064736f6c63430005100032"
+var EventerBin = "0x608060405234801561001057600080fd5b5033600090815260208190526040902068056bc75e2d63100000905561016e8061003b6000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c806370a082311461003b578063a9059cbb14610073575b600080fd5b6100616004803603602081101561005157600080fd5b50356001600160a01b03166100b3565b60408051918252519081900360200190f35b61009f6004803603604081101561008957600080fd5b506001600160a01b0381351690602001356100ce565b604080519115158252519081900360200190f35b6001600160a01b031660009081526020819052604090205490565b6040805182815290516000916001600160a01b0385169133917fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef919081900360200190a3506001600160a01b038216600090815260208190526040902080548201905560019291505056fea265627a7a72315820813e0116f2a5ae75ef3a912c96aad0b6fe7d827af084826ddfeb9f800bdf9ca264736f6c63430005110032"
 
 // DeployEventer deploys a new Ethereum contract, binding an instance of Eventer to it.
 func DeployEventer(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *Eventer, error) {
@@ -197,7 +197,7 @@ func (_Eventer *EventerTransactorRaw) Transact(opts *bind.TransactOpts, method s
 
 // BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
 //
-// Solidity: function balanceOf(address account) constant returns(uint256)
+// Solidity: function balanceOf(address account) view returns(uint256)
 func (_Eventer *EventerCaller) BalanceOf(opts *bind.CallOpts, account common.Address) (*big.Int, error) {
 	var (
 		ret0 = new(*big.Int)
@@ -209,14 +209,14 @@ func (_Eventer *EventerCaller) BalanceOf(opts *bind.CallOpts, account common.Add
 
 // BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
 //
-// Solidity: function balanceOf(address account) constant returns(uint256)
+// Solidity: function balanceOf(address account) view returns(uint256)
 func (_Eventer *EventerSession) BalanceOf(account common.Address) (*big.Int, error) {
 	return _Eventer.Contract.BalanceOf(&_Eventer.CallOpts, account)
 }
 
 // BalanceOf is a free data retrieval call binding the contract method 0x70a08231.
 //
-// Solidity: function balanceOf(address account) constant returns(uint256)
+// Solidity: function balanceOf(address account) view returns(uint256)
 func (_Eventer *EventerCallerSession) BalanceOf(account common.Address) (*big.Int, error) {
 	return _Eventer.Contract.BalanceOf(&_Eventer.CallOpts, account)
 }
