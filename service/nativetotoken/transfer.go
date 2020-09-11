@@ -98,6 +98,7 @@ func (e *TransferEngine) execute(opts *bind.TransactOpts, transfer *service.Tran
 			}
 			e.log.Debugf("transfer 0x%x is missing in remote blockchain. will be resubmitted",
 				registered.Hash)
+			opts.Nonce = new(big.Int).SetUint64(registered.Nonce)
 		}
 	}
 
