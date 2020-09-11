@@ -150,7 +150,7 @@ func (s *EngineSuite) TestReplaceNotFound() {
 		},
 	}
 
-	_, err = s.bridge.Register(s.FundedKeys[0], localHash, notfound, common.Address{8}, 8)
+	_, err = s.bridge.Register(s.FundedKeys[0], localHash, notfound, common.Address{8}, 1)
 	s.Require().NoError(err)
 	s.Backend.Commit()
 
