@@ -38,6 +38,7 @@ type config struct {
 
 	ScanStep          *big.Int
 	ScanPeriodSeconds int64
+	Timeout           time.Duration `default:"60m"`
 
 	EnablePrometheus   bool
 	PrometheusListener string
@@ -142,7 +143,7 @@ func Command() *cobra.Command {
 
 			wg.Add(1)
 			go func() {
-				errors <- service.PollForever(ctx, period, 10*time.Minute, func(ctx context.Context) {
+				errors <- service.PollForever(ctx, period, conf.Timeout, func(ctx context.Context) {
 					err := svc.Run(ctx)
 					if err != nil {
 						log.Debugf("poll failed with %v", err)
