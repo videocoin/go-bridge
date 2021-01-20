@@ -31,10 +31,14 @@ func NewWriterBlockResource(log *logrus.Entry, filename string) (*WriterBlockRes
 		log:      log,
 		filename: filename,
 		writer:   f,
+		block:    11674819, // start from this block instead of from where it left (statement below)
 	}
-	if err := binary.Read(f, binary.BigEndian, &resource.block); err != nil && !errors.Is(err, io.EOF) {
-		return nil, err
-	}
+	/*
+		if err := binary.Read(f, binary.BigEndian, &resource.block); err != nil && !errors.Is(err, io.EOF) {
+			return nil, err
+		}
+	*/
+
 	return resource, nil
 }
 
