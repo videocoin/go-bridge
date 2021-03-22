@@ -3,13 +3,13 @@ type: docker
 name: tests
 
 steps:
-- name: tests
-  image: golang:1.13
-  commands:
-  - go test ./... -v
+  - name: tests
+    image: golang:1.15
+    commands:
+      - go test ./... -v
 
 trigger:
   branch:
-  - master
+    - master
   event:
-  - pull_request
+    - pull_request

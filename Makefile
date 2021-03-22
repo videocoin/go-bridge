@@ -10,10 +10,6 @@ generate:
 build:
 	go build -tags=$(TAGS) -o ./build/bridge ./cmd/
 
-.PHONY: build-vendor
-build-vendor:
-	go build -tags=$(TAGS) -o ./build/bridge -mod=vendor ./cmd/
-
 .PHONY: tokenfct
 tokenfct:
 	go build -o ./build/tokenfct ./cmd/tools/tokenfct
@@ -31,7 +27,7 @@ abi:
 	./_assets/solc.sh ./build/ $(shell pwd)/solidity/ $(shell pwd)/solidity/contracts/bridge/RemoteBridge.sol
 
 .PHONY: images
-images:
+image:
 	docker build -t ${REGISTRY}/bridge:$(VERSION) -f _assets/Dockerfile .
 
 .PHONY: push
