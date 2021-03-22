@@ -236,17 +236,12 @@ func (f faucet) fund(ctx context.Context, keys <-chan *ecdsa.PrivateKey, gn, tn 
 	if err != nil {
 		return err
 	}
-	chain, err := f.client.ChainID(ctx)
-	if err != nil {
-		return err
-	}
-	signer := types.NewEIP155Signer(chain)
 
 	group, ctx := errgroup.WithContext(ctx)
 	for key := range keys {
 		to := crypto.PubkeyToAddress(key.PublicKey)
 		tx := types.NewTransaction(nonce, to, gn, 40000, price, nil)
-		tx, err := f.owner.Signer(signer, f.owner.From, tx)
+		tx, err := f.owner.Signer(f.owner.From, tx)
 		if err != nil {
 			return err
 		}

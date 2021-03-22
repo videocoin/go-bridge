@@ -20,7 +20,6 @@ var (
 	_ = big.NewInt
 	_ = strings.NewReader
 	_ = ethereum.NotFound
-	_ = abi.U256
 	_ = bind.Bind
 	_ = common.Big1
 	_ = types.BloomLookup
@@ -31,7 +30,7 @@ var (
 const NativeProxyABI = "[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"TransferProxied\",\"type\":\"event\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"addresspayable\",\"name\":\"to\",\"type\":\"address\"}],\"name\":\"proxy\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"}]"
 
 // NativeProxyBin is the compiled bytecode used for deploying new contracts.
-var NativeProxyBin = "0x608060405234801561001057600080fd5b506101e1806100206000396000f3fe60806040526004361061001e5760003560e01c806306713c3e14610023575b600080fd5b6100656004803603602081101561003957600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610067565b005b60008173ffffffffffffffffffffffffffffffffffffffff163460405180600001905060006040518083038185875af1925050503d80600081146100c7576040519150601f19603f3d011682016040523d82523d6000602084013e6100cc565b606091505b5050905080610143576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260158152602001807f7472616e736665722070726f7879206661696c6564000000000000000000000081525060200191505060405180910390fd5b8173ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167ffb13b2ffecafe583990a6ad9a7f0ee9e37c92e5932bb33b2491e7b4617600b99346040518082815260200191505060405180910390a3505056fea265627a7a72315820eba7e8969e1d0c537c5bf30e4c096b858123434b5cec7f464291ea3b65b89a0764736f6c63430005110032"
+var NativeProxyBin = "0x608060405234801561001057600080fd5b506101e1806100206000396000f3fe60806040526004361061001e5760003560e01c806306713c3e14610023575b600080fd5b6100656004803603602081101561003957600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610067565b005b60008173ffffffffffffffffffffffffffffffffffffffff163460405180600001905060006040518083038185875af1925050503d80600081146100c7576040519150601f19603f3d011682016040523d82523d6000602084013e6100cc565b606091505b5050905080610143576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260158152602001807f7472616e736665722070726f7879206661696c6564000000000000000000000081525060200191505060405180910390fd5b8173ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167ffb13b2ffecafe583990a6ad9a7f0ee9e37c92e5932bb33b2491e7b4617600b99346040518082815260200191505060405180910390a3505056fea265627a7a72315820a40190b87974637b36e5a4622434ee98bde5c7d71f325bea24691fbb7bb2409964736f6c63430005110032"
 
 // DeployNativeProxy deploys a new Ethereum contract, binding an instance of NativeProxy to it.
 func DeployNativeProxy(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *NativeProxy, error) {
@@ -155,7 +154,7 @@ func bindNativeProxy(address common.Address, caller bind.ContractCaller, transac
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_NativeProxy *NativeProxyRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_NativeProxy *NativeProxyRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _NativeProxy.Contract.NativeProxyCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -174,7 +173,7 @@ func (_NativeProxy *NativeProxyRaw) Transact(opts *bind.TransactOpts, method str
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_NativeProxy *NativeProxyCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_NativeProxy *NativeProxyCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _NativeProxy.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -360,5 +359,6 @@ func (_NativeProxy *NativeProxyFilterer) ParseTransferProxied(log types.Log) (*N
 	if err := _NativeProxy.contract.UnpackLog(event, "TransferProxied", log); err != nil {
 		return nil, err
 	}
+	event.Raw = log
 	return event, nil
 }

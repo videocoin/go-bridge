@@ -3,7 +3,7 @@ module github.com/videocoin/go-bridge
 go 1.13
 
 require (
-	github.com/ethereum/go-ethereum v1.9.12
+	github.com/ethereum/go-ethereum v1.9.25
 	github.com/go-kit/kit v0.10.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/pborman/uuid v1.2.0
