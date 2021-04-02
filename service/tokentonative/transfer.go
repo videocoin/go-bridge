@@ -47,7 +47,8 @@ func (e *TransferEngine) Execute(ctx context.Context, transfers []service.Transf
 		}
 		if executed {
 			e.log.Debugf("transfer 0x%x already executed", transfer.Hash)
-			return nil
+			//return nil
+			continue
 		}
 
 		opts := e.txOpts
