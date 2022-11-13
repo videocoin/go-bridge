@@ -1,0 +1,52 @@
+
+// {type:sequence}
+// {generate:true}
+
+[:Command]
+[:Service]
+[:tokentonative]
+[:TransferEngine]
+[:ERC20Access]
+[:IERC20]
+[:nativebridge]
+[:ethclient]
+[:fclient]
+
+[:Command]Dial(LocalChainRPC)>[:ethclient]
+[:ethclient]lclient .>[:Command]
+[:Command]Dial(ForeignChainRPC)>[:ethclient]
+[:ethclient]fclient .>[:Command]
+
+
+[:Command]NewERC20(fclient)>[:IERC20]
+[:IERC20]erc.>[:Command]
+[:Command]NewNativeBridge(BridgeAddress, lclient)>[:nativebridge]
+[:nativebridge]nativebridge.>[:Command]
+
+
+
+
+[:Command]NewTransferEngine(lclient, nativebridge)>[:tokentonative]
+[:TransferEngine]engine.>[:Command]
+
+[:Command]NewERC20Access(erc)>[:ERC20Access]
+[:ERC20Access]transfers interface.>[:Command]
+
+
+[:Command]NewService(fclient, engine, transfers)>[:Service]
+[:Service]service .>[:Command]
+[:Command]Run()>[:Service]
+[:Service]run()>[:Service]
+[:Service]getRange()>[:Service]
+
+[:Service]Transfers()>[:ERC20Access]
+[:ERC20Access]FilterTransfer>[:fclient]
+[:fclient] Filtered Transfers.>[:ERC20Access]
+[:ERC20Access]transfers.>[:Service]
+
+[:Service]Execute(transfers)>[:TransferEngine]
+[:TransferEngine]Check Already transfered Transfers>[:nativebridge]
+[:nativebridge].>[:TransferEngine]
+[:TransferEngine]Transfer>[:nativebridge]
+[:nativebridge].>[:TransferEngine]
+[:TransferEngine]>[:Command]
