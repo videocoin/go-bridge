@@ -11,6 +11,8 @@
 [:nativebridge]
 [:ethclient]
 [:fclient]
+[:Command]>[note: key_native, ERC20Address,  BridgeAddress_native, Banks{bg:cornsilk}]
+
 
 [:Command]Dial(LocalChainRPC)>[:ethclient]
 [:ethclient]lclient .>[:Command]

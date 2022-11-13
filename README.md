@@ -8,4 +8,6 @@ Token bridge for moving erc20-vid to native-vid and native-vid to erc20-vid.
 ![Token to native sequence diagram](/architecture/images/tokentonative_trusted_bridge.svg)
 
 ## Native ERC20 Vid
-[ERC20 to native bridge](/service/tokentonative/README.md)  
+[Native to token bridge](/service/nativetotoken/README.md)  
+
+![Token to native sequence diagram](architecture/images/nativetotoken_trusted_bridge.svg)
